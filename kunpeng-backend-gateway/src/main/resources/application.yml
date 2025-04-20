@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: kunpeng-backend-user-service
+          uri: lb://kunpeng-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: kunpeng-backend-question-service
+          uri: lb://kunpeng-backend-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: kunpeng-backend-judge-service
+          uri: lb://kunpeng-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+  application:
+    name: kunpeng-backend-gateway
+  main:
+    web-application-type: reactive
+server:
+  port: 8101
+knife4j:
+  gateway:
+    # ① 第一个配置，开启gateway聚合组件
+    enabled: true
+    # ② 第二行配置，设置聚合模式采用discover服务发现的模式
+    strategy: discover
+    discover:
+      # ③ 第三行配置，开启discover模式(自动发现)
+      enabled: true
+      # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
+      version: swagger2
